@@ -41,7 +41,7 @@ Observation are
 
 • First-View Images
 
-C. Action Space
+### Action Space
 
 MetaDrive receives normalized action as input to control
 each target vehicle. At each environmental time step,
