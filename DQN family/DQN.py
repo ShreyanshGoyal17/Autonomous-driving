@@ -36,7 +36,7 @@ class DQN(object):
         self.eval_net, self.target_net = DQN_Net().to(device), DQN_Net().to(device)
         self.learn_step_counter = 0  # for target updating
         self.memory_counter = 0  # for storing memory
-        # (s,a,r,s_)一共 2 * state + 2 个列,因为动作是唯一确定的
+        # (s,a,r,s_)一 2 * state + 2 
         self.memory = np.zeros((MEMORY_CAPACITY, self.eval_net.N_STATES * 2 + 2))  # initialize memory
         self.optimizer = torch.optim.Adam(self.eval_net.parameters(), lr=LR)
         self.loss_func = nn.MSELoss()
@@ -51,15 +51,15 @@ class DQN(object):
         self.MEMORY_CAPACITY = MEMORY_CAPACITY
         self.N_STATES = self.eval_net.N_STATES
 
-    # 此时只选择action的序号，具体的action放在主函数中确定
+ 
     def choose_action(self, x):
 
         x = torch.unsqueeze(torch.FloatTensor(x), 0).to(device)  # add 1 dimension to input state x
 
         if np.random.uniform() < self.EPSILON:  # greedy
             action_value = self.eval_net.forward(x).cpu()
-            # torch.max() 函数会返回两个tensor，第一个tensor是每行的最大值；第二个tensor是每行最大值的索引。
-            action_index = torch.max(action_value, 1)[1].data.numpy()[0]  # 此时已经转变为index的形式
+       
+            action_index = torch.max(action_value, 1)[1].data.numpy()[0]  
             action_max_value = torch.max(action_value, 1)[0].data.numpy()[0]
         else:
             action_index = np.random.randint(0, self.eval_net.N_ACTIONS)
@@ -89,7 +89,7 @@ class DQN(object):
         b_s_ = torch.FloatTensor(b_memory[:, -self.eval_net.N_STATES:]).to(device)
 
         # q_eval w.r.t the action in experience
-        q_eval = self.eval_net(b_s).gather(1, b_a)  # dim=1是横向的意思 shape (batch, 1)
+        q_eval = self.eval_net(b_s).gather(1, b_a)  # dim=1 shape (batch, 1)
         q_next = self.target_net(b_s_).detach()  # detach from graph, don't backpropagate
         q_target = b_r + GAMMA * q_next.max(1)[0].view(BATCH_SIZE, 1)  # shape (batch, 1)
         loss = self.loss_func(q_eval, q_target)
