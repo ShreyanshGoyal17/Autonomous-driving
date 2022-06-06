@@ -30,7 +30,7 @@ class DQN_Net(nn.Module):
 
     def forward(self, x):
         x = self.fc1(x)
-        x = F.relu(x) # ReLU(Rectified Linear Unit,修正线性单元),取正
+        x = F.relu(x) # ReLU(Rectified Linear Unit
         x = self.fc2(x)
         x = F.relu(x)
         actions_value = self.out(x)
